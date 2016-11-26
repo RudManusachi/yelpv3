@@ -14,20 +14,24 @@ class Yelpv3 {
 
   getAccessToken(cb) {
     const promise = new Promise((resolve, reject) => {
-      request.post({
-        url: 'https://api.yelp.com/oauth2/token',
-        form: {
-          client_id: this.appId,
-          client_secret: this.appSecret,
-          grant_type: 'client_credentials'
-        }
-      }, (err, response, data) => {
-        if (!err && response.statusCode == 200) {
-          this.accessToken = JSON.parse(data).access_token;
-          resolve(data);
-        }
-        reject(err);
-      });
+      if (this.accessToken) {
+        resolve(this.accessToken);
+      } else {
+        request.post({
+          url: 'https://api.yelp.com/oauth2/token',
+          form: {
+            client_id: this.appId,
+            client_secret: this.appSecret,
+            grant_type: 'client_credentials'
+          }
+        }, (err, response, data) => {
+          if (!err && response.statusCode == 200) {
+            this.accessToken = JSON.parse(data).access_token;
+            resolve(this.accessToken);
+          }
+          reject(err);
+        });
+      }
     });
 
     if (typeof cb === 'function') {
@@ -44,34 +48,21 @@ class Yelpv3 {
     params = (typeof params === 'undefined') ? {} : params;
 
     const promise = new Promise((resolve, reject) => {
-      if (this.accessToken) {
+      this.getAccessToken().then((accessToken) => {
         request.get({
           url: baseUrl + resource + jsonToQueryString(params),
           headers: {
-            'Authorization': 'Bearer ' + this.accessToken
+            'Authorization': 'Bearer ' + accessToken
           }
         }, (err, response, data) => {
           if (!err && response.statusCode == 200) {
-            resolve(data);
+            resolve(JSON.parse(data));
           }
-        });
-      } else {
-        this.getAccessToken().then((data) => {
-          request.get({
-            url: baseUrl + resource + jsonToQueryString(params),
-            headers: {
-              'Authorization': 'Bearer ' + this.accessToken
-            }
-          }, (err, response, data) => {
-            if (!err && response.statusCode == 200) {
-              resolve(data);
-            }
-            reject(err);
-          });
-        }).catch((err) => {
           reject(err);
         });
-      }
+      }).catch((err) => {
+        reject(err);
+      });
     });
 
     if (typeof callback === 'function') {

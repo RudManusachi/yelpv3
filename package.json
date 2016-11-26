@@ -4,7 +4,7 @@
   "description": "Library to query Yelp's v3 API",
   "main": "index.js",
   "scripts": {
-    "test": "echo \\\"Error: no test specified\\\" && exit 1"
+    "test": "node test/index.js"
   },
   "repository": {
     "type": "git",
@@ -23,5 +23,8 @@
   "homepage": "https://github.com/danieljin/yelpv3#readme",
   "dependencies": {
     "request": "^2.74.0"
+  },
+  "devDependencies": {
+    "blue-tape": "^1.0.0"
   }
 }
