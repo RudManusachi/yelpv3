@@ -2,8 +2,7 @@ const test = require('blue-tape');
 const Yelpv3 = require('../index.js');
 
 const yelp = new Yelpv3({
-  app_id: process.env.APP_ID,
-  app_secret: process.env.APP_SECRET
+  API_KEY: process.env.API_KEY,
 })
 
 test('yelp reviews', t => {

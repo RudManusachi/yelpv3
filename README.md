@@ -15,8 +15,8 @@ View [yelp's guide](https://github.com/Yelp/yelp-api-v3/blob/master/docs/tutoria
 var Yelp = require('yelpv3');
 
 var yelp = new Yelp({
-  app_id: '************',
-  app_secret: '************'
+  API_KEY: '************' //Wondering where your client secret went? The Fusion API now uses API Keys to authenticate...
+                          //https://www.yelp.com/developers/documentation/v3/authentication#where-is-my-client-secret-going
 });
 
 // https://github.com/Yelp/yelp-api-v3/blob/master/docs/api-references/businesses-search.md
